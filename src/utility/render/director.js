@@ -6,18 +6,23 @@ const Director = function () {
   let that = {};
   let _oldTime = 0;
 
-  that.create = function (width,height) {
+  let _resources = undefined;
+  that.create = function (width,height,resources) {
     console.log('create game with: ' + width + 'height:' + height);
+    _resources = resources;
     that.game = new Phaser.Game(width, height, Phaser.Canvas, "Game", {preload: preload, create: createGame,update: update});
   };
 
   const preload = function () {
     console.log('preload');
-    that.game.load.image('dragonhead',resources.dragon_head);
+    // that.game.load.image('dragonhead',resources.dragon_head);
+    for (let i in resources){
+      that.game.load.image(i, resources[i]);
+    }
   };
   const createGame = function () {
     console.log('create');
-    that.game.add.sprite(200,400,'dragonhead');
+    // that.game.add.sprite(200,400,'dragonhead');
 
   };
   const update = function () {
@@ -35,11 +40,8 @@ const Director = function () {
 
 
   const runWorld = function (world) {
-    // if (that.runningWorld){
-    //   that.game.removeChild(world);
-    // }
-    // that.game.add.sprite(world.node);
-    // that.runningWorld = world;
+    world.group = that.game.create.group();
+
   };
 
   that.runWorld = runWorld;

@@ -6,6 +6,7 @@ import resources from './../resources'
 const MainWorld = function () {
   let that = {};
 
+  that.group = undefined;
   that.node = director.shareDirector().game.add.sprite('dragonhead');
   that.init = function () {
 

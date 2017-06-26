@@ -8244,15 +8244,19 @@
 	
 	var _mainWorld2 = _interopRequireDefault(_mainWorld);
 	
+	var _resources = __webpack_require__(303);
+	
+	var _resources2 = _interopRequireDefault(_resources);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	window.onload = function () {
 	  console.log('window onload');
-	  _import.director.create(_gameDefines2.default.width, _gameDefines2.default.height);
-	  // let mainWorld = MainWorld();
-	  // mainWorld.init();
-	  // director.runWorld(mainWorld);
+	  _import.director.create(_gameDefines2.default.width, _gameDefines2.default.height, _resources2.default);
 	
+	  var mainWorld = (0, _mainWorld2.default)();
+	  mainWorld.init();
+	  _import.director.runWorld(mainWorld);
 	};
 
 /***/ },
@@ -8286,9 +8290,9 @@
 	  value: true
 	});
 	
-	var _resources = __webpack_require__(303);
+	var _resources2 = __webpack_require__(303);
 	
-	var _resources2 = _interopRequireDefault(_resources);
+	var _resources3 = _interopRequireDefault(_resources2);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -8296,18 +8300,23 @@
 	  var that = {};
 	  var _oldTime = 0;
 	
-	  that.create = function (width, height) {
+	  var _resources = undefined;
+	  that.create = function (width, height, resources) {
 	    console.log('create game with: ' + width + 'height:' + height);
+	    _resources = resources;
 	    that.game = new Phaser.Game(width, height, Phaser.Canvas, "Game", { preload: preload, create: createGame, update: update });
 	  };
 	
 	  var preload = function preload() {
 	    console.log('preload');
-	    that.game.load.image('dragonhead', _resources2.default.dragon_head);
+	    // that.game.load.image('dragonhead',resources.dragon_head);
+	    for (var i in _resources3.default) {
+	      that.game.load.image(i, _resources3.default[i]);
+	    }
 	  };
 	  var createGame = function createGame() {
 	    console.log('create');
-	    that.game.add.sprite(200, 400, 'dragonhead');
+	    // that.game.add.sprite(200,400,'dragonhead');
 	  };
 	  var update = function update() {
 	    // if (that.runningWorld){
@@ -8323,11 +8332,7 @@
 	  };
 	
 	  var runWorld = function runWorld(world) {
-	    // if (that.runningWorld){
-	    //   that.game.removeChild(world);
-	    // }
-	    // that.game.add.sprite(world.node);
-	    // that.runningWorld = world;
+	    world.group = that.game.create.group();
 	  };
 	
 	  that.runWorld = runWorld;
@@ -8398,6 +8403,7 @@
 	var MainWorld = function MainWorld() {
 	  var that = {};
 	
+	  that.group = undefined;
 	  that.node = _import.director.shareDirector().game.add.sprite('dragonhead');
 	  that.init = function () {};
 	  that.update = function (dt) {
