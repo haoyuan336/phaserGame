@@ -1,19 +1,24 @@
 /**
  * Created by chuhaoyuan on 2017/6/26.
  */
-import {director} from './../utility/import'
+import {director,Inherited,BaseWorld,Sprite} from './../utility/import'
 import resources from './../resources'
+import defines from './../game-defines'
 const MainWorld = function () {
-  let that = {};
+  let that = Inherited(BaseWorld(director.shareDirector().game));
+  that.inheritOn('init',function () {
+    return true;
+  });
 
-  that.group = undefined;
-  that.node = director.shareDirector().game.add.sprite('dragonhead');
-  that.init = function () {
 
-  };
-  that.update = function (dt) {
-    console.log('dt' + dt)
-  };
+
+  that.inheritOn('update',function (dt) {
+
+
+
+
+  });
+
   return that;
 };
 export default MainWorld;

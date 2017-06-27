@@ -8236,27 +8236,68 @@
 	
 	var _import = __webpack_require__(299);
 	
-	var _gameDefines = __webpack_require__(301);
+	var _gameDefines = __webpack_require__(302);
 	
 	var _gameDefines2 = _interopRequireDefault(_gameDefines);
 	
-	var _mainWorld = __webpack_require__(302);
+	var _mainWorld = __webpack_require__(303);
 	
 	var _mainWorld2 = _interopRequireDefault(_mainWorld);
 	
-	var _resources = __webpack_require__(303);
+	var _resources = __webpack_require__(301);
 	
 	var _resources2 = _interopRequireDefault(_resources);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	window.onload = function () {
-	  console.log('window onload');
-	  _import.director.create(_gameDefines2.default.width, _gameDefines2.default.height, _resources2.default);
+	function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 	
-	  var mainWorld = (0, _mainWorld2.default)();
-	  mainWorld.init();
-	  _import.director.runWorld(mainWorld);
+	window.onload = function () {
+	  var _this = this;
+	
+	  console.log('window onload');
+	  _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+	    return regeneratorRuntime.wrap(function _callee$(_context) {
+	      while (1) {
+	        switch (_context.prev = _context.next) {
+	          case 0:
+	            console.log('开始创建导演单例');
+	            _context.next = 3;
+	            return _import.director.shareDirector().create(_gameDefines2.default.width, _gameDefines2.default.height, _resources2.default);
+	
+	          case 3:
+	            _context.next = 5;
+	            return function () {
+	              // console.log('加载完成');
+	              // director.shareDirector().game.add.sprite(0,0,resources.dragon_head);
+	              // let mainWorld = MainWorld();
+	              // director.shareDirector().render(mainWorld);
+	              // // mainWorld.init(); //先渲染在初始化
+	              // mainWorld.render(); //渲染世界里面的内容
+	
+	
+	              // let world = BaseWorld(director.shareDirector().game); // 将游戏主体作为参数传进去，这样就可以做到使用工厂方法创建元素了
+	              // world.init();
+	              // director.shareDirector().runWorld(world);
+	              //
+	              //
+	              //
+	              // let sprite = Sprite(resources.dragon_head,{x: 100,y: 200});
+	              // world.addChild(sprite);
+	
+	
+	              var mainWorld = (0, _mainWorld2.default)();
+	              mainWorld.init();
+	              _import.director.shareDirector().runWorld(mainWorld);
+	            }();
+	
+	          case 5:
+	          case 'end':
+	            return _context.stop();
+	        }
+	      }
+	    }, _callee, _this);
+	  }))();
 	};
 
 /***/ },
@@ -8268,71 +8309,88 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.director = undefined;
+	exports.BaseLayer = exports.Inherited = exports.Sprite = exports.BaseWorld = exports.director = undefined;
 	
 	var _director = __webpack_require__(300);
 	
 	var _director2 = _interopRequireDefault(_director);
 	
+	var _baseWorld = __webpack_require__(304);
+	
+	var _baseWorld2 = _interopRequireDefault(_baseWorld);
+	
+	var _sprite = __webpack_require__(306);
+	
+	var _sprite2 = _interopRequireDefault(_sprite);
+	
+	var _inherited = __webpack_require__(307);
+	
+	var _inherited2 = _interopRequireDefault(_inherited);
+	
+	var _baseLayer = __webpack_require__(308);
+	
+	var _baseLayer2 = _interopRequireDefault(_baseLayer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	exports.director = _director2.default; /**
-	                                        * Created by chuhaoyuan on 2017/6/26.
-	                                        */
+	exports.director = _director2.default;
+	exports.BaseWorld = _baseWorld2.default;
+	exports.Sprite = _sprite2.default;
+	exports.Inherited = _inherited2.default;
+	exports.BaseLayer = _baseLayer2.default; /**
+	                                          * Created by chuhaoyuan on 2017/6/26.
+	                                          */
 
 /***/ },
 /* 300 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	
-	var _resources2 = __webpack_require__(303);
-	
-	var _resources3 = _interopRequireDefault(_resources2);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
+	/**
+	 * Created by chuhaoyuan on 2017/6/26.
+	 */
 	var Director = function Director() {
 	  var that = {};
 	  var _oldTime = 0;
 	
-	  var _resources = undefined;
 	  that.create = function (width, height, resources) {
-	    console.log('create game with: ' + width + 'height:' + height);
-	    _resources = resources;
-	    that.game = new Phaser.Game(width, height, Phaser.Canvas, "Game", { preload: preload, create: createGame, update: update });
+	    return new Promise(function (resolve, reject) {
+	      console.log('create game with: ' + width + 'height:' + height);
+	      that.game = new Phaser.Game(width, height, Phaser.Canvas, "Game", { preload: function preload() {
+	          for (var i in resources) {
+	            that.game.load.image(resources[i], resources[i]);
+	          }
+	        }, create: function create() {
+	          if (resolve) {
+	            resolve();
+	          }
+	        }, update: update });
+	    });
 	  };
 	
-	  var preload = function preload() {
-	    console.log('preload');
-	    // that.game.load.image('dragonhead',resources.dragon_head);
-	    for (var i in _resources3.default) {
-	      that.game.load.image(i, _resources3.default[i]);
-	    }
-	  };
-	  var createGame = function createGame() {
-	    console.log('create');
-	    // that.game.add.sprite(200,400,'dragonhead');
-	  };
 	  var update = function update() {
-	    // if (that.runningWorld){
-	    //   let nowDate = new Date();
-	    //   let dt = 0;
-	    //   if (_oldTime < nowDate.getTime()){
-	    //     dt = nowDate.getTime() - _oldTime;
-	    //     _oldTime = nowDate.getTime();
-	    //   }
-	    //   // console.log('dt = ' + dt);
-	    //   that.runningWorld.update(dt);
-	    // }
+	    if (that.runingWorld) {
+	      var nowDate = new Date();
+	      var dt = 0;
+	      if (_oldTime < nowDate.getTime()) {
+	        dt = nowDate.getTime() - _oldTime;
+	        _oldTime = nowDate.getTime();
+	      }
+	      // console.log('dt = ' + dt);
+	      that.runingWorld.update(dt);
+	    }
 	  };
 	
 	  var runWorld = function runWorld(world) {
-	    world.group = that.game.create.group();
+	    // world.group = that.game.create.group();
+	    if (that.runingWorld) {
+	      that.runingWorld.destroy();
+	    }
+	    that.runingWorld = world;
 	  };
 	
 	  that.runWorld = runWorld;
@@ -8342,19 +8400,17 @@
 	  };
 	
 	  return that;
-	}; /**
-	    * Created by chuhaoyuan on 2017/6/26.
-	    */
-	
+	};
 	var Sharedirector = Sharedirector || function () {
 	  var that = {};
 	  var instance = null;
-	  that.create = function (width, height) {
+	  var create = function create() {
 	    if (instance === null) {
-	      instance = Director().create(width, height);
+	      instance = Director();
 	    }
 	  };
 	  that.shareDirector = function () {
+	    create();
 	    return instance;
 	  };
 	  return that;
@@ -8363,58 +8419,6 @@
 
 /***/ },
 /* 301 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	/**
-	 * Created by chuhaoyuan on 2017/4/20.
-	 */
-	var defines = {};
-	defines.resPath = './asset/';
-	defines.width = 480;
-	defines.height = 754;
-	exports.default = defines;
-
-/***/ },
-/* 302 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _import = __webpack_require__(299);
-	
-	var _resources = __webpack_require__(303);
-	
-	var _resources2 = _interopRequireDefault(_resources);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/**
-	 * Created by chuhaoyuan on 2017/6/26.
-	 */
-	var MainWorld = function MainWorld() {
-	  var that = {};
-	
-	  that.group = undefined;
-	  that.node = _import.director.shareDirector().game.add.sprite('dragonhead');
-	  that.init = function () {};
-	  that.update = function (dt) {
-	    console.log('dt' + dt);
-	  };
-	  return that;
-	};
-	exports.default = MainWorld;
-
-/***/ },
-/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -8423,7 +8427,7 @@
 	  value: true
 	});
 	
-	var _gameDefines = __webpack_require__(301);
+	var _gameDefines = __webpack_require__(302);
 	
 	var _gameDefines2 = _interopRequireDefault(_gameDefines);
 	
@@ -8441,6 +8445,206 @@
 	  res[i] = _gameDefines2.default.resPath + res[i];
 	}
 	exports.default = res;
+
+/***/ },
+/* 302 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 * Created by chuhaoyuan on 2017/4/20.
+	 */
+	var defines = {};
+	defines.resPath = './asset/';
+	defines.width = 1800;
+	defines.height = 900;
+	exports.default = defines;
+
+/***/ },
+/* 303 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _import = __webpack_require__(299);
+	
+	var _resources = __webpack_require__(301);
+	
+	var _resources2 = _interopRequireDefault(_resources);
+	
+	var _gameDefines = __webpack_require__(302);
+	
+	var _gameDefines2 = _interopRequireDefault(_gameDefines);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var MainWorld = function MainWorld() {
+	  var that = (0, _import.Inherited)((0, _import.BaseWorld)(_import.director.shareDirector().game));
+	  that.inheritOn('init', function () {
+	    return true;
+	  });
+	
+	  that.inheritOn('update', function (dt) {});
+	
+	  return that;
+	}; /**
+	    * Created by chuhaoyuan on 2017/6/26.
+	    */
+	exports.default = MainWorld;
+
+/***/ },
+/* 304 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 * Created by chuhaoyuan on 2017/6/26.
+	 */
+	var BaseWorld = function BaseWorld(game) {
+	  var that = {};
+	  var _game = game;
+	  that.group = _game.add.group();
+	  that.init = function () {};
+	
+	  // that.addChild = function (object) {
+	  //   // console.log('object =' + JSON.stringify(object));
+	  //   object.node = _game.add.sprite(object.position.x,object.position.y ,object.name);
+	  //   that.group.add(object.node);
+	  // };
+	
+	  that.add2World = function (object) {
+	    that.group.add(object.group);
+	  };
+	
+	  that.update = function (dt) {};
+	
+	  return that;
+	};
+	exports.default = BaseWorld;
+
+/***/ },
+/* 305 */,
+/* 306 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 * Created by chuhaoyuan on 2017/6/27.
+	 */
+	var Sprite = function Sprite(name, position) {
+	  var that = {};
+	  that.name = function () {
+	    if (name) {
+	      return name;
+	    } else {
+	      return "";
+	    }
+	  }();
+	
+	  that.position = function () {
+	    if (position) {
+	      return position;
+	    } else {
+	      return { x: 0, y: 0 };
+	    }
+	  }();
+	
+	  that.setPosition = function (point) {
+	    that.position = point;
+	    that.node.position = point;
+	  };
+	  that.update = function (dt) {};
+	
+	  return that;
+	};
+	exports.default = Sprite;
+
+/***/ },
+/* 307 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 * Created by chuhaoyuan on 2017/6/27.
+	 */
+	var Inherited = function Inherited(obj) {
+	  var registry = {};
+	  obj.inheritOn = function (name, handler) {
+	    if (!obj.hasOwnProperty(name)) {
+	      obj[name] = handler;
+	      return;
+	    }
+	
+	    if (registry.hasOwnProperty(name)) {
+	      registry[name].push(handler);
+	    } else {
+	      var parentHandler = obj[name];
+	      registry[name] = [parentHandler, handler];
+	      obj[name] = function () {
+	        var result = void 0;
+	        var handlerList = registry[name];
+	        for (var index in handlerList) {
+	          result = handlerList[index].apply(this, arguments);
+	          if (result !== undefined && !result) {
+	            return result;
+	          }
+	        }
+	        return result;
+	      };
+	    }
+	  };
+	
+	  return obj;
+	};
+	exports.default = Inherited;
+
+/***/ },
+/* 308 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 * Created by chuhaoyuan on 2017/6/27.
+	 */
+	var BaseLayer = function BaseLayer(game) {
+	  var that = {};
+	  var _game = game;
+	  that.group = _game.add.group();
+	  that.init = function () {};
+	
+	  that.addChild = function (object) {
+	    // console.log('object =' + JSON.stringify(object));
+	    object.node = _game.add.sprite(object.position.x, object.position.y, object.name);
+	    that.group.add(object.node);
+	  };
+	
+	  that.update = function (dt) {};
+	};
+	exports.default = BaseLayer;
 
 /***/ }
 /******/ ]);

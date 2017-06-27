@@ -3,6 +3,6 @@
  */
 var defines = {};
 defines.resPath = './asset/';
-defines.width = 480;
-defines.height = 754;
+defines.width = 1800;
+defines.height =  900;
 export default defines;
